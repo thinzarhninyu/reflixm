@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+enum Type {
+  movie
+  series
+  show
+}
+
+enum Genre {
+  action
+  thriller
+  crime
+  legal
+  drama
+  comedy
+  romance
+  variety
+  reality
+  fantasy
+  ficiton
+  scifi
+  noir
+  mystery
+  historical
+}
+
+model Show {
+  id           String         @id @default(cuid())
+  title        String
+  type         Type
+  genre        Genre[]
+  description  String
+  image        String?
+  cast         String[]
+  releaseYear  Int
+  noOfEpisodes Int
+  noOfSeasons  Int
+  orgLanguage  String
+  country      String
+  network      String
+  director     String[]
+  writer       String[]
+  trailerLinks String[]
+  watchLinks   String[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  review       Review?
+  watchList    WatchList[]
+  watchHistory WatchHistory[]
+}
+
+model Review {
+  id        String    @id @default(cuid())
+  showId    String    @unique
+  show      Show      @relation(fields: [showId], references: [id])
+  rating    Int
+  review    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  comment   Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String
+  reviewId  String
+  review    Review   @relation(fields: [reviewId], references: [id])
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WatchList {
+  id        String   @id @default(cuid())
+  userId    String
+  showId    String
+  show      Show     @relation(fields: [showId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WatchHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  showId    String
+  show      Show     @relation(fields: [showId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
