@@ -26,7 +26,7 @@ export default function RootLayout({
     <ClerkProvider>
     <html lang="en">
       <body className={font.className}>
-        <header className="sticky top-0 z-50">
+        <header className="sticky top-0 z-50 w-full">
           <Header />
         </header>
         <main>{children}</main>
