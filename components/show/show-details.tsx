@@ -10,7 +10,7 @@ const ShowDetails = ({ show }: { show: Show }) => {
             <div className="flex justify-center items-center mt-5 mb-10">
                 <Image src={show.image ? show.image : DEFAULT_IMAGE_URL} alt={show.title} width={700} height={200} />
             </div>
-            <h1 className="text-4xl font-bold text-center mb-5">{show.title}</h1>
+            <h1 className="text-4xl font-bold text-center mb-5">{show.title} ({show.releaseYear})</h1>
             <div className="flex flex-wrap gap-x-3 gap-y-3 justify-center items-center mb-5">
                 {show.genre.map((genre, index) => (
                     <Badge className="bg-orange-700" key={index}>{genre}</Badge>
@@ -27,14 +27,13 @@ const ShowDetails = ({ show }: { show: Show }) => {
                 </div>
                 <p className="mb-3 text-lg font-bold">Details:</p>
                 <ul className="list-disc pl-5">
-                    <li><span className="font-bold">Release Year:</span> {show.releaseYear}</li>
-                    <li><span className="font-bold">Number of Episodes:</span> {show.noOfEpisodes}</li>
-                    <li><span className="font-bold">Number of Seasons:</span> {show.noOfSeasons}</li>
-                    <li><span className="font-bold">Language:</span> {show.orgLanguage}</li>
-                    <li><span className="font-bold">Country:</span> {show.country}</li>
-                    <li><span className="font-bold">Network:</span> {show.network}</li>
-                    <li><span className="font-bold">Director(s):</span> {show.director.join(", ")}</li>
-                    <li><span className="font-bold">Writer(s):</span> {show.writer.join(", ")}</li>
+                    <li><span>Number of Episodes:</span> {show.noOfEpisodes}</li>
+                    <li><span>Number of Seasons:</span> {show.noOfSeasons}</li>
+                    <li><span>Language:</span> {show.orgLanguage}</li>
+                    <li><span>Country:</span> {show.country}</li>
+                    <li><span>Network:</span> {show.network}</li>
+                    <li><span>Director(s):</span> {show.director.join(", ")}</li>
+                    <li><span>Writer(s):</span> {show.writer.join(", ")}</li>
                 </ul>
             </div>
             <div className="mb-5">

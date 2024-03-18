@@ -51,9 +51,9 @@ const ShowComments = ({ comments, reviewId }: { comments: Comment[], reviewId: s
     };
 
     return (
-        <div>
+        <div className="mx-auto w-full rounded-lg border-2 pt-5">
             <h2 className="text-2xl font-bold mb-5 text-center">Comments</h2>
-            <div className="shadow-md rounded-md flex flex-col mt-10">
+            <div className="mt-10">
                 {/* <h2 className="text-xl font-bold text-gray-800 mb-4 mt-10 text-center dark:text-white">Comments</h2> */}
                 <ScrollArea className="h-[200px] flex flex-col gap-6 pb-5">
                     {comments && (

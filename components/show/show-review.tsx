@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 const ShowReview = ({ review }: { review: Review }) => {
 
     return (
-        <div>
+        <div className="mx-auto">
             <h2 className="text-2xl font-bold mb-5 text-center">My Review</h2>
             <div className="flex justify-center items-center">
                 <Badge className={`text-md font-bold text-center mb-3 ${review.rating >= 4.0 ? 'bg-green-700' : review.rating >= 3.0 ? 'bg-yellow-500' : 'bg-red-600'}`}>

@@ -13,7 +13,7 @@ import HeaderSearch from "@/components/header/search";
 import { getShows } from "@/data/show";
 
 import { SignInButton, UserButton, auth } from "@clerk/nextjs";
-import { Heart, History } from "lucide-react";
+import { Heart, History, LogIn } from "lucide-react";
 
 const Header = async () => {
 
@@ -75,7 +75,7 @@ const Header = async () => {
                                 </TooltipProvider>
                             </>
                         )}
-                        {!userId ? <SignInButton /> : <UserButton />}
+                        {!userId ? <SignInButton><LogIn className="w-5 h-5"/></SignInButton> : <UserButton />}
                     </div>
                 </div>
             </nav>
