@@ -18,7 +18,7 @@ const Home = async () => {
     //     <h1 className="text-4xl font-bold text-center mb-10">Welcome to {APP_NAME}</h1>
     //     <SearchBar />
     //   </div>
-    <main className="flex min-h-screen flex-col justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-10 lg:p-24">
       <h1 className="text-4xl font-bold text-center mb-10">Welcome to {APP_NAME}</h1>
       <SearchBar />
       <div className="mt-16 mb-10">
@@ -28,8 +28,8 @@ const Home = async () => {
         </div>
       </div>
       <div>
-        <div className="flex flex-row justify-between items-center px-10">
-          <h2 className="text-2xl font-bold mb-5">Highest Rated Shows</h2>
+        <div className="flex flex-row justify-between items-center lg:px-10 mb-5">
+          <h2 className="text-2xl font-bold">Best Reviews</h2>
           <Link className="hover:underline" href="/shows">View All</Link>
         </div>
         <div className="flex flex-wrap">

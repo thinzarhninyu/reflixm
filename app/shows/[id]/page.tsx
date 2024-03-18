@@ -22,7 +22,7 @@ const ShowDetailsPage = async ({ params }: { params: { id: string } }) => {
     const relatedShows = await getRelatedShows(show.id);
 
     return (
-        <main className="flex min-h-screen flex-col justify-between p-24">
+        <main className="flex min-h-screen flex-col items-center justify-between p-10 lg:p-24">
             <ShowDetails show={show} />
             <Separator className="my-10" />
             <ShowReview review={review} />
