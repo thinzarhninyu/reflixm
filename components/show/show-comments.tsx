@@ -60,13 +60,13 @@ const ShowComments = ({ comments, reviewId }: { comments: Comment[], reviewId: s
                         <>
                             {comments.length > 0 ? (
                                 comments.map((comment) => (
-                                    <div key={comment.id} className="flex items-start space-x-4 p-5 text-left mx-5">
+                                    <div key={comment.id} className="flex justify-start items-center space-x-4 p-5 text-left mx-5">
                                         <Avatar className="w-10 h-10">
                                             <AvatarImage src={'https://github.com/shadcn.png'} />
                                             <AvatarFallback>Avatar</AvatarFallback>
                                         </Avatar>
-                                        <div>
-                                            <p className="text-gray-600 dark:text-gray-200">{comment.comment}</p>
+                                        <div className="flex items-center">
+                                            <p>{comment.comment}</p>
                                         </div>
                                     </div>
                                 ))

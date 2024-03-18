@@ -5,7 +5,7 @@ import SearchBar from "@/components/show/search-bar";
 
 const WatchHistory = async () => {
 
-    const {userId} = auth();
+    const { userId } = auth();
 
     if (!userId) {
         return null;
@@ -23,7 +23,7 @@ const WatchHistory = async () => {
             <SearchBar />
             <div className="flex flex-wrap mt-10">
                 {watchHistory && watchHistory.map((show) => (
-                    <div key={show.id} className="w-full sm:w-1/3 p-2">
+                    <div key={show.id} className="w-full sm:w-full md:w-full lg:w-1/3 p-2">
                         <Show key={show.id} show={show} />
                     </div>
                 ))}

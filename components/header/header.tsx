@@ -13,6 +13,7 @@ import HeaderSearch from "@/components/header/search";
 import { getShows } from "@/data/show";
 
 import { SignInButton, UserButton, auth } from "@clerk/nextjs";
+import { Heart, History } from "lucide-react";
 
 const Header = async () => {
 
@@ -34,16 +35,48 @@ const Header = async () => {
                                 <TooltipTrigger asChild>
                                     <Link href="/" className="text-sm font-bold leading-6 text-gray-900 dark:text-white">{APP_NAME}</Link>
                                 </TooltipTrigger>
-                                <TooltipContent className="bg-white">
+                                <TooltipContent className="">
                                     <p>Home</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
                     </div>
                     <div className="w-50">
-                        <HeaderSearch shows={shows!} />
+                        {shows && <HeaderSearch shows={shows} />}
                     </div>
-                    {!userId ? <SignInButton /> : <UserButton />}
+                    <div className="flex flex-row gap-x-5 justify-center items-center">
+                        {userId && (
+                            <>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Link href="/watchlist" className="-m-1.5 p-1.5">
+                                                <span className="sr-only">Watchlist</span>
+                                                <Heart size={24} />
+                                            </Link>
+                                        </TooltipTrigger>
+                                        <TooltipContent className="">
+                                            <p>Watchlist</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Link href="/watch-history" className="-m-1.5 p-1.5">
+                                                <span className="sr-only">Watch History</span>
+                                                <History size={24} />
+                                            </Link>
+                                        </TooltipTrigger>
+                                        <TooltipContent className="">
+                                            <p>Watch History</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </>
+                        )}
+                        {!userId ? <SignInButton /> : <UserButton />}
+                    </div>
                 </div>
             </nav>
         </header >

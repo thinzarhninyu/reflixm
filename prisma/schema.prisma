@@ -62,6 +62,8 @@ model Review {
   show      Show      @relation(fields: [showId], references: [id])
   rating    Int
   review    String
+  upvotes   Int       @default(0)
+  downvotes Int       @default(0)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   comment   Comment[]
@@ -73,6 +75,8 @@ model Comment {
   reviewId  String
   review    Review   @relation(fields: [reviewId], references: [id])
   comment   String
+  upvotes   Int      @default(0)
+  downvotes Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

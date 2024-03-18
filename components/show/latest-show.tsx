@@ -26,7 +26,7 @@ import { DeleteWatchHistory } from "@/actions/watch-history-delete";
 import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
 
-const LatestShow = ({ show, type }: { show: Show, type?: string }) => {
+const LatestShow = ({ show, type }: { show: Show & { review: { rating: number } | null }, type?: string }) => {
 
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
@@ -88,7 +88,7 @@ const LatestShow = ({ show, type }: { show: Show, type?: string }) => {
         <div>
             <Link href={`/shows/${show.id}`}>
                 <Card className='w-full h-full flex flex-col lg:flex-row'>
-                    <div className='w-full lg:w-25'>
+                    <div className='flex items-center w-full lg:w-25 p-3'>
                         <Image
                             src={show.image ? show.image : DEFAULT_IMAGE_URL}
                             alt={show.title}
@@ -97,7 +97,7 @@ const LatestShow = ({ show, type }: { show: Show, type?: string }) => {
                             height={100}
                             blurDataURL="data:..."
                             placeholder="blur"
-                            className='w-full rounded-l-lg'
+                            className='w-full rounded-lg'
                         />
                     </div>
                     <div className='flex w-full lg:w-75'>
@@ -109,7 +109,7 @@ const LatestShow = ({ show, type }: { show: Show, type?: string }) => {
                                         <Badge className="bg-orange-700" key={index}>{genre}</Badge>
                                     ))}
                                 </div>
-                                <CardDescription className="pt-3">{show.description}</CardDescription>
+                                <CardDescription className="pt-3 overflow-hidden line-clamp-3">{show.description}</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <p>Starring:</p>
@@ -122,7 +122,7 @@ const LatestShow = ({ show, type }: { show: Show, type?: string }) => {
                             <CardFooter className="justify-between items-center flex flex-row gap-x-4">
                                 <div className="flex items-center gap-x-2">
                                     <Star className="w-5 h-5" fill="orange" color="orange" />
-                                    <span className="text-gray-500">4.0/5.0</span>
+                                    <span className="text-gray-500">{show.review?.rating.toFixed(1)}/5.0</span>
                                 </div>
                                 {!type && (
                                     <div className="flex flex-row gap-x-3">

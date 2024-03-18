@@ -13,12 +13,15 @@ const Home = async () => {
   const highestRatedShows = await getHighestRatedShows();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="flex flex-col items-center justify-center mb-10">
-        <h1 className="text-4xl font-bold text-center mb-10">Welcome to {APP_NAME}</h1>
-        <SearchBar />
-      </div>
-      <div className="mt-5 mb-10">
+    // <main className="flex min-h-screen flex-col justify-between p-24">
+    //   <div className="flex flex-col items-center justify-center mb-10">
+    //     <h1 className="text-4xl font-bold text-center mb-10">Welcome to {APP_NAME}</h1>
+    //     <SearchBar />
+    //   </div>
+    <main className="flex min-h-screen flex-col justify-between p-24">
+      <h1 className="text-4xl font-bold text-center mb-10">Welcome to {APP_NAME}</h1>
+      <SearchBar />
+      <div className="mt-16 mb-10">
         <h2 className="text-2xl font-bold mb-5 text-center">Latest Review</h2>
         <div className='w-full flex justify-center items-center'>
           {latestRatedShow && <LatestShow show={latestRatedShow} />}
@@ -31,7 +34,7 @@ const Home = async () => {
         </div>
         <div className="flex flex-wrap">
           {highestRatedShows && highestRatedShows.map((show) => (
-            <div key={show.id} className="w-full sm:w-1/3 p-2">
+            <div key={show.id} className="w-full sm:w-full md:w-full lg:w-1/3 p-2">
               <Show show={show} />
             </div>
           ))}
