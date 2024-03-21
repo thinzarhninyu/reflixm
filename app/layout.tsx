@@ -1,21 +1,16 @@
 import type { Metadata } from "next";
-import { Fresca, Inter, Markazi_Text, Palanquin_Dark, Poppins, Raleway, Sofia_Sans, Space_Grotesk, Tienne } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header/header";
 import { ClerkProvider } from '@clerk/nextjs'
-import { DM_Sans } from "next/font/google";
-import { APP_NAME } from "@/data/constants";
+import { APP_DESCRIPTION, APP_NAME } from "@/data/constants";
+import { Toaster } from "@/components/ui/toaster"
 
-const inter = Inter({ subsets: ["latin"] });
-// const font = DM_Sans({ subsets: ["latin"], weight: "700" });
-// const font = Markazi_Text({ subsets: ["latin"], weight: "700"});
-// const font = Space_Grotesk({ subsets: ["latin"], weight: "700" });
-// const font = Poppins({ subsets: ["latin"], weight: "500" });
-const font = Raleway({ subsets: ["latin"], weight: "700" });
+const font = Poppins({ subsets: ["latin"], weight: "500" });
 
 export const metadata: Metadata = {
   title: APP_NAME,
-  description: "Review for Shows",
+  description: APP_DESCRIPTION,
 };
 
 export default function RootLayout({
@@ -34,6 +29,7 @@ export default function RootLayout({
             <Header />
           </header>
           <main>{children}</main>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

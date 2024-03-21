@@ -3,8 +3,15 @@
 import { db } from "@/lib/db";
 import z from "zod";
 import { WatchListDeleteSchema } from "@/schemas";
+import { auth } from "@clerk/nextjs";
 
 export const DeleteWatchlist = async (values: z.infer<typeof WatchListDeleteSchema>) => {
+
+    const { userId } = auth();
+
+    if (!userId) {
+        return { error: "Unauthorized" };
+    }
 
     const validatedFields = WatchListDeleteSchema.safeParse(values);
 
@@ -13,11 +20,11 @@ export const DeleteWatchlist = async (values: z.infer<typeof WatchListDeleteSche
     }
 
     try {
-        const watchlist = await db.watchList.delete({
-            where: { id: values.id }
+        const watchlist = await db.watchList.deleteMany({
+            where: { showId: values.id, userId: userId }
         });
 
-        return { success: "Watchlist deleted!", watchlistId: watchlist.id };
+        return { success: "Watchlist deleted!" };
     } catch (error) {
         return { error: "Error deleting watchlist!" };
     }

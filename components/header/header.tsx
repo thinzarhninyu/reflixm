@@ -11,6 +11,7 @@ import {
 import { APP_LOGO, APP_NAME } from "@/data/constants";
 import HeaderSearch from "@/components/header/search";
 import { getShows } from "@/data/show";
+import { Command, CommandEmpty, CommandInput, CommandList, CommandGroup, CommandItem } from "@/components/ui/command";
 
 import { SignInButton, UserButton, auth } from "@clerk/nextjs";
 import { Heart, History, LogIn } from "lucide-react";
@@ -21,13 +22,17 @@ const Header = async () => {
 
     const shows = await getShows();
 
+    if (!shows || shows.length === 0) {
+        return <div>No Shows Found</div>;
+    }
+
     return (
-        <header className="bg-white dark:bg-gray-900 drop-shadow-lg py-2">
+        <header className="bg-white dark:bg-gray-900 drop-shadow-lg">
             <nav className="w-full flex items-center justify-between p-2 lg:px-10" aria-label="Global">
                 <div className="w-full flex items-center justify-between flex-row gap-x-3">
                     <div className="flex flex-row gap-x-3 items-center">
                         <Link href="/" className="-m-1.5 p-1.5">
-                            <span className="sr-only">ReFlix</span>
+                            <span className="sr-only">{APP_NAME}</span>
                             <Image src={APP_LOGO} alt="logo" width={50} height={50} />
                         </Link>
                         <TooltipProvider>
@@ -42,7 +47,7 @@ const Header = async () => {
                         </TooltipProvider>
                     </div>
                     <div className="w-50">
-                        {shows && <HeaderSearch shows={shows} />}
+                        {/* {shows && shows.length > 0 && <HeaderSearch shows={shows} />} */}
                     </div>
                     <div className="flex flex-row gap-x-5 justify-center items-center">
                         {userId && (
@@ -75,7 +80,7 @@ const Header = async () => {
                                 </TooltipProvider>
                             </>
                         )}
-                        {!userId ? <SignInButton><LogIn className="w-5 h-5"/></SignInButton> : <UserButton />}
+                        {!userId ? <SignInButton redirectUrl="/"><LogIn className="w-5 h-5" /></SignInButton> : <UserButton afterSignOutUrl="/" />}
                     </div>
                 </div>
             </nav>

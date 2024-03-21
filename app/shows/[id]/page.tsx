@@ -3,7 +3,7 @@ import ShowDetails from "@/components/show/show-details";
 import ShowReview from "@/components/show/show-review";
 import { Separator } from "@/components/ui/separator";
 import { getCommentsByReviewId, getShowById, getShowReviewById, getRelatedShows } from "@/data/show";
-import Show from "@/components/show/show";
+import ShowCard from "@/components/show/show";
 
 const ShowDetailsPage = async ({ params }: { params: { id: string } }) => {
     const show = await getShowById(params.id);
@@ -31,7 +31,7 @@ const ShowDetailsPage = async ({ params }: { params: { id: string } }) => {
             <div className="flex flex-wrap mt-10">
                 {relatedShows && relatedShows.length > 0 ? relatedShows.map((show) => (
                     <div key={show.id} className="w-full sm:w-full md:w-full lg:w-1/3 p-2">
-                        <Show key={show.id} show={show} />
+                        <ShowCard key={show.id} show={show} />
                     </div>
                 )) : (
                     <div>No Related Shows Found</div>

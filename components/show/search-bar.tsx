@@ -1,82 +1,71 @@
 "use client"
 
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { useState } from 'react';
+import { Genre } from '@prisma/client';
+import { Input } from '@/components/ui/input';
+import Link from 'next/link';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '../ui/button';
 
-import { cn } from "@/lib/utils"
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+const SearchBar = ({
+  search: initialSearch = "",
+  genre: initialGenre = "",
+  setSearch,
+  setGenre,
+}: {
+  search?: string;
+  genre?: Genre | string;
+  setSearch?: (search: string) => void;
+  setGenre?: (genre: Genre) => void;
+}) => {
+  const [search, setSearchValue] = useState(initialSearch);
+  const [genre, setGenreValue] = useState(initialGenre ?? "");
 
-import { Genre } from "@prisma/client"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+    if (setSearch) {
+      setSearch(e.target.value);
+    }
+  };
 
-const SearchBar = () => {
+  const handleGenreChange = (selectedGenre: Genre) => {
+    setGenreValue(selectedGenre);
+    if (setGenre) {
+      setGenre(selectedGenre);
+    }
+  };
 
   const genres = Object.keys(Genre);
 
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
-
   return (
-    <div className="flex flex-row gap-x-3">
-      <Input placeholder="Search show..." />
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[200px] justify-between"
-          >
-            {value
-            ? genres.find((genre) => genre === value)
-            : "Select genre..."}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
-            <CommandInput placeholder="Search genre..." />
-            <CommandEmpty>No genre found.</CommandEmpty>
-            <CommandGroup>
-              {genres.map((genre) => (
-                <CommandItem
-                  key={genre}
-                  value={genre}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === genre ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {genre}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </Command>
-        </PopoverContent>
-      </Popover>
-      <Button variant="outline" className="ml-2">
-        Search
+    <div className="flex flex-row gap-x-3 w-full">
+      <Input
+        value={search}
+        onChange={handleSearchChange}
+        placeholder="Search show..."
+      />
+      <Select value={genre} onValueChange={handleGenreChange}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Genre" />
+        </SelectTrigger>
+        <SelectContent>
+          {genres.map((genre) => (
+            <SelectItem key={genre} value={genre}>
+              {genre}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Button asChild>
+        <Link
+          href={`/shows?${search ? `search=${search}` : ""}${search && genre ? "&" : ""
+            }${genre ? `genre=${genre}` : ""}`}
+        >
+          Search
+        </Link>
       </Button>
     </div>
-  )
-}
+  );
+};
 
 export default SearchBar;

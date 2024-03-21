@@ -134,3 +134,25 @@ export const getRelatedShows = async (showId: string) => {
         return null;
     }
 }
+
+export const checkWatchlist = async (showId: string, userId: string) => {
+    try {
+        const watchlist = await db.watchList.findFirst({
+            where: { showId, userId }
+        });
+        return watchlist;
+    } catch {
+        return null;
+    }
+}
+
+export const checkWatchHistory = async (showId: string, userId: string) => {
+    try {
+        const watchHistory = await db.watchHistory.findFirst({
+            where: { showId, userId }
+        });
+        return watchHistory;
+    } catch {
+        return null;
+    }
+}

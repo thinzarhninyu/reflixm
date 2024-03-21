@@ -1,4 +1,4 @@
-import Show from "@/components/show/show";
+import ShowCard from "@/components/show/show";
 import { getWatchListByUserId } from "@/data/show";
 import { auth } from "@clerk/nextjs";
 import SearchBar from "@/components/show/search-bar";
@@ -25,7 +25,7 @@ const Watchlist = async () => {
             <div className="flex flex-wrap mt-10">
                 {watchlist && watchlist.map((show) => (
                     <div key={show.id} className="w-full sm:w-full md:w-full lg:w-1/3 p-2">
-                        <Show key={show.id} show={show} />
+                        <ShowCard key={show.id} show={show} type="watchlist" />
                     </div>
                 ))}
             </div>
