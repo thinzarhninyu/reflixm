@@ -3,16 +3,16 @@
 import { auth } from "@clerk/nextjs";
 import { db } from "@/lib/db";
 import z from "zod";
-import { WatchListSchema } from "@/schemas";
+import { WatchSchema } from "@/schemas";
 
-export const CreateWatchlist = async (values: z.infer<typeof WatchListSchema>) => {
+export const CreateWatchlist = async (values: z.infer<typeof WatchSchema>) => {
     const { userId } = auth();
 
     if (!userId) {
         return { error: "Unauthorized" };
     }
 
-    const validatedFields = WatchListSchema.safeParse(values);
+    const validatedFields = WatchSchema.safeParse(values);
 
     if (!validatedFields.success) {
         return { error: "Invalid fields!" };
@@ -22,7 +22,7 @@ export const CreateWatchlist = async (values: z.infer<typeof WatchListSchema>) =
         const watchlist = await db.watchList.create({
             data: {
                 userId,
-                showId: values.showId
+                showId: values.showId!
             }
         });
 

@@ -2,10 +2,10 @@
 
 import { db } from "@/lib/db";
 import z from "zod";
-import { WatchHistoryDeleteSchema } from "@/schemas";
+import { WatchSchema } from "@/schemas";
 import { auth } from "@clerk/nextjs";
 
-export const DeleteWatchHistory = async (values: z.infer<typeof WatchHistoryDeleteSchema>) => {
+export const DeleteWatchHistory = async (values: z.infer<typeof WatchSchema>) => {
 
     const { userId } = auth();
 
@@ -13,7 +13,7 @@ export const DeleteWatchHistory = async (values: z.infer<typeof WatchHistoryDele
         return { error: "Unauthorized" };
     }
 
-    const validatedFields = WatchHistoryDeleteSchema.safeParse(values);
+    const validatedFields = WatchSchema.safeParse(values);
 
     if (!validatedFields.success) {
         return { error: "Invalid fields!" };

@@ -2,10 +2,10 @@
 
 import { db } from "@/lib/db";
 import z from "zod";
-import { WatchListDeleteSchema } from "@/schemas";
+import { WatchSchema } from "@/schemas";
 import { auth } from "@clerk/nextjs";
 
-export const DeleteWatchlist = async (values: z.infer<typeof WatchListDeleteSchema>) => {
+export const DeleteWatchlist = async (values: z.infer<typeof WatchSchema>) => {
 
     const { userId } = auth();
 
@@ -13,7 +13,7 @@ export const DeleteWatchlist = async (values: z.infer<typeof WatchListDeleteSche
         return { error: "Unauthorized" };
     }
 
-    const validatedFields = WatchListDeleteSchema.safeParse(values);
+    const validatedFields = WatchSchema.safeParse(values);
 
     if (!validatedFields.success) {
         return { error: "Invalid fields!" };

@@ -1,15 +1,21 @@
-import { getLatestRatedShow, getHighestRatedShows } from "@/data/show";
+import { getLatestRatedShow, getHighestRatedShows, getWatchListByUserId, getWatchHistoryByUserId } from "@/data/show";
 import SearchBar from "@/components/show/search-bar";
-import ShowCard from "@/components/show/show";
 import Link from "next/link";
 import LatestShow from "@/components/show/latest-show";
 import { APP_NAME } from "@/data/constants";
 import { ArrowRightCircle } from "lucide-react";
+import ShowList from "@/components/show/show-list";
+import { auth } from "@clerk/nextjs";
 
 const Home = async () => {
 
   const latestRatedShow = await getLatestRatedShow();
   const highestRatedShows = await getHighestRatedShows();
+
+  const { userId } = auth();
+
+  const watchlist = await getWatchListByUserId(userId!);
+  const watchHistory = await getWatchHistoryByUserId(userId!);
 
   return (
     <main className="flex min-h-screen flex-col p-10 lg:p-24">
@@ -18,7 +24,7 @@ const Home = async () => {
       <div className="mt-16 mb-10">
         <h2 className="text-2xl font-bold mb-5 text-center">Latest Review</h2>
         <div className='w-full flex justify-center items-center'>
-          {latestRatedShow && <LatestShow show={latestRatedShow} />}
+          {latestRatedShow && <LatestShow show={latestRatedShow} inWatchHistory={watchHistory?.some(history => history.id === latestRatedShow.id) || false} inWatchlist={watchlist?.some(list => list.id === latestRatedShow.id) || false} />}
         </div>
       </div>
       <div>
@@ -26,15 +32,11 @@ const Home = async () => {
           <h2 className="text-2xl font-bold">Best Reviews</h2>
           <Link className="hover:underline flex flex-row gap-x-3 justify-center items-center" href="/shows">
             <span>View All</span>
-            <ArrowRightCircle className="w-4 h-4"/>
+            <ArrowRightCircle className="w-4 h-4" />
           </Link>
         </div>
         <div className="flex flex-wrap">
-          {highestRatedShows && highestRatedShows.map((show) => (
-            <div key={show.id} className="w-full sm:w-full md:w-full lg:w-1/3 p-2">
-              <ShowCard show={show} />
-            </div>
-          ))}
+          {highestRatedShows && <ShowList shows={highestRatedShows} watchHistory={watchHistory!} watchList={watchlist!} />}
         </div>
       </div>
     </main>

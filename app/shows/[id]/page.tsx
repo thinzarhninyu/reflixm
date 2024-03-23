@@ -2,12 +2,15 @@ import ShowComments from "@/components/show/show-comments";
 import ShowDetails from "@/components/show/show-details";
 import ShowReview from "@/components/show/show-review";
 import { Separator } from "@/components/ui/separator";
-import { getCommentsByReviewId, getShowById, getShowReviewById, getRelatedShows } from "@/data/show";
-import ShowCard from "@/components/show/show";
+import { getCommentsByReviewId, getShowById, getShowReviewById, getRelatedShows, getWatchListByUserId, getWatchHistoryByUserId } from "@/data/show";
+import { auth } from "@clerk/nextjs";
+import ShowList from "@/components/show/show-list";
 
 const ShowDetailsPage = async ({ params }: { params: { id: string } }) => {
     const show = await getShowById(params.id);
     const review = await getShowReviewById(params.id);
+
+    const { userId } = auth();
 
     if (!show) {
         return <div>No Show Found</div>
@@ -17,28 +20,26 @@ const ShowDetailsPage = async ({ params }: { params: { id: string } }) => {
         return <div>No Review Found</div>
     }
 
-    const comments = await getCommentsByReviewId(review.id);
+    const comments = await getCommentsByReviewId(review.review.id);
 
     const relatedShows = await getRelatedShows(show.id);
+
+
+    const watchlist = await getWatchListByUserId(userId!);
+    const watchHistory = await getWatchHistoryByUserId(userId!);
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-10 lg:p-24">
             <ShowDetails show={show} />
             <Separator className="my-10" />
-            <ShowReview review={review} />
+            <ShowReview review={review.review} votes={review.votes} />
             <Separator className="my-10" />
             <h2 className="text-2xl font-bold mb-5">Related Shows</h2>
             <div className="flex flex-wrap mt-10">
-                {relatedShows && relatedShows.length > 0 ? relatedShows.map((show) => (
-                    <div key={show.id} className="w-full sm:w-full md:w-full lg:w-1/3 p-2">
-                        <ShowCard key={show.id} show={show} />
-                    </div>
-                )) : (
-                    <div>No Related Shows Found</div>
-                )}
+                {relatedShows && relatedShows.length > 0 ? <ShowList shows={relatedShows} watchHistory={watchHistory!} watchList={watchlist!} /> : <div>No Related Shows Found</div>}
             </div>
             <Separator className="my-10" />
-            <ShowComments comments={comments!} reviewId={review.id} />
+            <ShowComments comments={comments!} reviewId={review.review.id} />
         </main>
     );
 }

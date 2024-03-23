@@ -1,14 +1,13 @@
-"use client"
-
+"use client";
 import { useSearchParams } from 'next/navigation'
 import SearchBar from './search-bar'
-import ShowCard from './show'
 import { Genre, Show } from '@prisma/client';
 import { useEffect, useState } from 'react';
+import ShowList from './show-list';
 
 type ShowWithReview = Show & { review: { rating: number } | null };
 
-const ShowResults = ({ shows }: { shows: ShowWithReview[] }) => {
+const ShowResults = ({ shows, watchList, watchHistory }: { shows: ShowWithReview[], watchList: ShowWithReview[], watchHistory: ShowWithReview[] }) => {
 
     const searchParams = useSearchParams()
  
@@ -32,11 +31,7 @@ const ShowResults = ({ shows }: { shows: ShowWithReview[] }) => {
         <div>
             <SearchBar setSearch={setSearch} setGenre={setGenre} search={search} genre={genre} />
             <div className="flex flex-wrap mt-10">
-                {filteredShows.map(show => (
-                    <div key={show.id} className="w-full sm:w-full md:w-full lg:w-1/3 p-2">
-                        <ShowCard key={show.id} show={show} />
-                    </div>
-                ))}
+                {filteredShows && <ShowList shows={filteredShows} watchHistory={watchHistory} watchList={watchList} />}
             </div>
         </div>
     )

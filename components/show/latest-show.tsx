@@ -18,95 +18,44 @@ import { HeartIcon } from 'lucide-react';
 
 import { useTransition, useState } from "react";
 import z from "zod";
-import { WatchHistoryDeleteSchema, WatchListDeleteSchema, WatchListSchema } from "@/schemas";
-import { CreateWatchlist } from "@/actions/watchlist-create";
-import { CreateWatchHistory } from "@/actions/watch-history-create";
-import { DeleteWatchlist } from "@/actions/watchlist-delete";
-import { DeleteWatchHistory } from "@/actions/watch-history-delete";
+import { WatchSchema } from "@/schemas";
 import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
-import { redirect, useRouter } from 'next/navigation';
-import { useToast } from '../ui/use-toast';
-import { redirectToSignIn } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { WatchShow } from '@/actions/show-watch';
 
-const LatestShow = ({ show, type }: { show: Show & { review: { rating: number } | null }, type?: string }) => {
+const LatestShow = ({
+    show,
+    inWatchlist,
+    inWatchHistory
+}: {
+    show: Show & { review: { rating: number } | null },
+    inWatchlist: boolean,
+    inWatchHistory: boolean
+}) => {
 
     const router = useRouter();
-    const toast = useToast();
 
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
     const [isPending, startTransition] = useTransition();
 
-    // const signInToast = () => {
-    //     toast({
-    //         title: "Sign in to continue",
-    //         description: "Proceed to sign in to continue.",
-    //       })
-    //     }
+    const [isInWatchHistory, setIsInWatchHistory] = useState<boolean>(inWatchHistory);
+    const [isInWatchlist, setIsInWatchlist] = useState<boolean>(inWatchlist);
 
-    const onAddToWatchlist = (values: z.infer<typeof WatchListSchema>) => {
+    const onWatch = (values: z.infer<typeof WatchSchema>) => {
         setError("");
         setSuccess("");
 
         startTransition(() => {
-            CreateWatchlist(values)
+            WatchShow(values)
                 .then((data) => {
-                    setError(data.error);
-                    setSuccess(data.success);
-                    if (data.error === "Unauthorized") {
-                        router.push("/sign-in");
-                        // redirectToSignIn({returnBackUrl: router.pathname});
-                    }
-                });
-        });
-    };
-
-    const onAddToWatchHistory = (values: z.infer<typeof WatchListSchema>) => {
-        setError("");
-        setSuccess("");
-
-        startTransition(() => {
-            CreateWatchHistory(values)
-                .then((data) => {
-                    setError(data.error);
-                    setSuccess(data.success);
-                    if (data.error === "Unauthorized") {
+                    setError(data?.error);
+                    setSuccess(data?.success);
+                    if (data?.error === "Unauthorized") {
                         router.push("/sign-in");
                     }
-                });
-        });
-    };
-
-    const onRemoveFromWatchlist = (values: z.infer<typeof WatchListDeleteSchema>) => {
-        setError("");
-        setSuccess("");
-
-        startTransition(() => {
-            DeleteWatchlist(values)
-                .then((data) => {
-                    setError(data.error);
-                    setSuccess(data.success);
-                    if (data.error === "Unauthorized") {
-                        router.push("/sign-in");
-                    }
-                });
-        });
-    };
-
-    const onRemoveFromWatchHistory = (values: z.infer<typeof WatchHistoryDeleteSchema>) => {
-        setError("");
-        setSuccess("");
-
-        startTransition(() => {
-            DeleteWatchHistory(values)
-                .then((data) => {
-                    setError(data.error);
-                    setSuccess(data.success);
-                    if (data.error === "Unauthorized") {
-                        router.push("/sign-in");
-                    }
-                });
+                })
         });
     };
 
@@ -154,24 +103,28 @@ const LatestShow = ({ show, type }: { show: Show & { review: { rating: number } 
                                 <Star className="w-5 h-5" fill="orange" color="orange" />
                                 <span className="text-gray-500">{show.review?.rating.toFixed(1)}/5.0</span>
                             </div>
-
-                            {!type && (
-                                <div className="flex flex-row gap-x-3">
-                                    <Button variant="outline" onClick={() => onAddToWatchlist({ showId: show.id })}>
-                                        <HeartIcon className="w-5 h-5" />
-                                    </Button>
-                                    <Button onClick={() => onAddToWatchHistory({ showId: show.id })}>Watched?</Button>
-                                </div>
-                            )}
-                            {type === "watchlist" && (
-                                <Button onClick={() => onRemoveFromWatchlist({ id: show.id })}>
-                                    <HeartIcon className="w-5 h-5" fill="red" color="red" />
+                            <div className="flex flex-row gap-x-3">
+                                <Button variant="outline" onClick={() => {
+                                    if (isInWatchlist) {
+                                        setIsInWatchlist(false);
+                                        onWatch({ type: "removeWatchlist", showId: show.id })
+                                    } else {
+                                        setIsInWatchlist(true);
+                                        onWatch({ type: "addWatchlist", showId: show.id })
+                                    }
+                                }}>
+                                    <HeartIcon className="w-5 h-5" fill={isInWatchlist ? "red" : "transparent"} color={!isInWatchlist ? "black" : "transparent"} />
                                 </Button>
-                            )}
-                            {type === "watchHistory" && (
-                                <Button onClick={() => onRemoveFromWatchHistory({ id: show.id })}>Remove from Watch History</Button>
-                            )}
-
+                                <Button onClick={() => {
+                                    if (isInWatchHistory) {
+                                        setIsInWatchHistory(false);
+                                        onWatch({ type: "removeWatchHistory", showId: show.id })
+                                    } else {
+                                        setIsInWatchHistory(true);
+                                        onWatch({ type: "addWatchHistory", showId: show.id })
+                                    }
+                                }}>Watched {isInWatchHistory ? "!" : "?"}</Button>
+                            </div>
                         </CardFooter>
                     </div>
                 </div >

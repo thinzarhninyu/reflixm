@@ -1,20 +1,17 @@
-"use client"
-
+"use client";
 import type { Comment } from "@prisma/client";
 import { CreateComment } from "@/actions/comment-create";
 import { DeleteComment } from "@/actions/comment-delete";
 import { CommentDeleteSchema, CommentSchema } from "@/schemas";
 import { useTransition, useState } from "react";
 import z from "zod";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { getShowReviewById } from "@/data/show";
-import { comment } from "postcss";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
-import { Badge } from "../ui/badge";
 import { ScrollArea } from "../ui/scroll-area";
 import { Textarea } from "../ui/textarea";
-import { Send } from "lucide-react";
+import { Send, Trash } from "lucide-react";
+import AlertBox from "../alert-box";
+import { useAuth } from "@clerk/nextjs";
 
 const ShowComments = ({ comments, reviewId }: { comments: Comment[], reviewId: string }) => {
 
@@ -22,6 +19,8 @@ const ShowComments = ({ comments, reviewId }: { comments: Comment[], reviewId: s
     const [success, setSuccess] = useState<string | undefined>("");
     const [isPending, startTransition] = useTransition();
     const [comment, setComment] = useState("");
+    const { userId } = useAuth();
+    const [showComments, setShowComments] = useState<Comment[]>(comments);
 
     const onAddComment = (values: z.infer<typeof CommentSchema>) => {
         setError("");
@@ -46,6 +45,7 @@ const ShowComments = ({ comments, reviewId }: { comments: Comment[], reviewId: s
                 .then((data) => {
                     setError(data.error);
                     setSuccess(data.success);
+                    if (data.success) setShowComments((prevComments) => prevComments.filter((comment) => comment.id !== values.id));
                 });
         });
     };
@@ -55,12 +55,14 @@ const ShowComments = ({ comments, reviewId }: { comments: Comment[], reviewId: s
             <h2 className="text-2xl font-bold mb-5 text-center">Comments</h2>
             <div className="mt-10">
                 {/* <h2 className="text-xl font-bold text-gray-800 mb-4 mt-10 text-center dark:text-white">Comments</h2> */}
-                <ScrollArea className="h-[200px] flex flex-col gap-6 pb-5">
+                <ScrollArea className="h-[300px] flex flex-col gap-6 pb-5">
+                    <AlertBox title="Heads up!" description="Our comments are anonymous. Please be respectful and kind to other users." />
                     {comments && (
                         <>
-                            {comments.length > 0 ? (
-                                comments.map((comment) => (
-                                    <div key={comment.id} className="flex justify-start items-center space-x-4 p-5 text-left mx-5">
+                            {showComments.length > 0 ? (
+                                showComments.map((comment) => (
+                                    <div key={comment.id} className="flex justify-between items-center space-x-4 p-5 text-left mx-5">
+                                        <div className="flex flex-row gap-x-3">
                                         <Avatar className="w-10 h-10">
                                             <AvatarImage src={'https://github.com/shadcn.png'} />
                                             <AvatarFallback>Avatar</AvatarFallback>
@@ -68,6 +70,12 @@ const ShowComments = ({ comments, reviewId }: { comments: Comment[], reviewId: s
                                         <div className="flex items-center">
                                             <p>{comment.comment}</p>
                                         </div>
+                                        </div>
+                                        {userId === comment.userId && (
+                                            <Button className="bg-red-500 hover:bg-red-600" onClick={() => onDeleteComment({ id: comment.id })}>
+                                                <Trash className="w-5 h-5 dark:text-white" />
+                                            </Button>
+                                        )}
                                     </div>
                                 ))
                             ) : (

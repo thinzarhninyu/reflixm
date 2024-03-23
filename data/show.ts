@@ -1,9 +1,10 @@
 import { db } from "@/lib/db";
 import { Genre, Type } from "@prisma/client";
+import { count } from "console";
 
 export const getHighestRatedShows = async () => {
     try {
-        const shows = await db.show.findMany({ orderBy: { review: { rating: "desc" } }, take: 3 , include: { review: { select: { rating: true } } } });
+        const shows = await db.show.findMany({ orderBy: { review: { rating: "desc" } }, take: 3, include: { review: { select: { rating: true } } } });
         return shows;
     } catch {
         return null;
@@ -30,8 +31,10 @@ export const getShowById = async (id: string) => {
 
 export const getShowReviewById = async (showId: string) => {
     try {
-        const reviews = await db.review.findFirst({ where: { showId } });
-        return reviews;
+        const review = await db.review.findFirst({ where: { showId } });
+        if (!review) return null;
+        const votes = await db.reviewVote.findMany({ where: { reviewId: review.id } });
+        return { review, votes };
     } catch {
         return null;
     }
@@ -50,7 +53,7 @@ export const getShows = async () => {
 
 export const getShowsByGenre = async (genre: Genre) => {
     try {
-        const shows = await db.show.findMany({ where: { genre: { has: genre } }, include: { review: { select: { rating: true } } }});
+        const shows = await db.show.findMany({ where: { genre: { has: genre } }, include: { review: { select: { rating: true } } } });
         return shows;
     } catch {
         return null;
@@ -152,6 +155,15 @@ export const checkWatchHistory = async (showId: string, userId: string) => {
             where: { showId, userId }
         });
         return watchHistory;
+    } catch {
+        return null;
+    }
+}
+
+export const getReviewVotesByUserId = async (userId: string) => {
+    try {
+        const votes = await db.reviewVote.findMany({ where: { userId } });
+        return votes;
     } catch {
         return null;
     }

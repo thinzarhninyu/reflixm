@@ -1,7 +1,7 @@
-import ShowCard from "@/components/show/show";
-import { getWatchHistoryByUserId } from "@/data/show";
+import { getWatchHistoryByUserId, getWatchListByUserId } from "@/data/show";
 import { auth } from "@clerk/nextjs";
 import SearchBar from "@/components/show/search-bar";
+import ShowList from "@/components/show/show-list";
 
 const WatchHistory = async () => {
 
@@ -12,6 +12,7 @@ const WatchHistory = async () => {
     }
 
     const watchHistory = await getWatchHistoryByUserId(userId);
+    const watchList = await getWatchListByUserId(userId);
 
     if (!watchHistory) {
         return <div>No Shows Found</div>
@@ -22,11 +23,7 @@ const WatchHistory = async () => {
             <h1 className="text-4xl font-bold text-center mb-10">Watch History</h1>
             <SearchBar />
             <div className="flex flex-wrap mt-10">
-                {watchHistory && watchHistory.map((show) => (
-                    <div key={show.id} className="w-full sm:w-full md:w-full lg:w-1/3 p-2">
-                        <ShowCard key={show.id} show={show} type="watchHistory"/>
-                    </div>
-                ))}
+                {watchHistory && <ShowList shows={watchHistory} watchList={watchList!} watchHistory={watchHistory} />}
             </div>
         </main>
     );

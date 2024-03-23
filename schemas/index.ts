@@ -16,28 +16,15 @@ export const CommentDeleteSchema = z.object({
     }),
 });
 
-export const WatchListSchema = z.object({
+export const WatchSchema = z.object({
     id: z.string().optional(),
-    showId: z.string().min(1, {
-        message: "Show ID is required",
-    }),
+    showId: z.string().optional(),
+    type: z.enum(["addWatchlist", "removeWatchlist", "addWatchHistory", "removeWatchHistory"]),
 });
 
-export const WatchListDeleteSchema = z.object({
+export const VoteSchema = z.object({
     id: z.string().min(1, {
-        message: "Watchlist ID is required",
+        message: "ID is required",
     }),
-});
-
-export const WatchHistorySchema = z.object({    
-    id: z.string().optional(),
-    showId: z.string().min(1, {
-        message: "Show ID is required",
-    }),
-});
-
-export const WatchHistoryDeleteSchema = z.object({
-    id: z.string().min(1, {
-        message: "Watch history ID is required",
-    }),
+    type: z.enum(["upvote", "downvote"]),
 });

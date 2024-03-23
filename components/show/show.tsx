@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 import type { Show } from "@prisma/client";
 
 import {
@@ -17,136 +16,24 @@ import Image from "next/image";
 import { HeartIcon, Star } from "lucide-react";
 import { DEFAULT_IMAGE_URL } from "@/data/constants";
 
-import { useTransition, useState, useEffect } from "react";
+import { useState } from "react";
 import z from "zod";
-import { WatchHistoryDeleteSchema, WatchListDeleteSchema, WatchListSchema } from "@/schemas";
-import { CreateWatchlist } from "@/actions/watchlist-create";
-import { CreateWatchHistory } from "@/actions/watch-history-create";
-import { DeleteWatchlist } from "@/actions/watchlist-delete";
-import { DeleteWatchHistory } from "@/actions/watch-history-delete";
-import { redirect, useRouter } from "next/navigation";
-import { db } from "@/lib/db";
-import { auth, useUser } from "@clerk/nextjs";
-import { checkWatchHistory, checkWatchlist } from "@/data/show";
+import { WatchSchema } from "@/schemas";
 
-const ShowCard = ({ show, type }: { show: Show & { review: { rating: number } | null }, type?: string }) => {
+const ShowCard = ({
+    show,
+    onWatch,
+    inWatchlist,
+    inWatchHistory
+}: {
+    show: Show & { review: { rating: number } | null },
+    onWatch: (values: z.infer<typeof WatchSchema>) => void,
+    inWatchlist: boolean,
+    inWatchHistory: boolean
+}) => {
 
-    const router = useRouter();
-
-    // const { userId } = auth();
-
-    const {user} = useUser();
-
-    const [error, setError] = useState<string | undefined>("");
-    const [success, setSuccess] = useState<string | undefined>("");
-    const [isPending, startTransition] = useTransition();
-
-    const [isInWatchlist, setIsInWatchlist] = useState<boolean>(false);
-    const [isInWatchHistory, setIsInWatchHistory] = useState<boolean>(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const checkInWatchlist = await checkWatchlist(show.id, user?.id ?? "");
-            const checkInWatchHistory = await checkWatchHistory(show.id, user?.id ?? "");
-            setIsInWatchlist(!!checkInWatchlist);
-            setIsInWatchHistory(!!checkInWatchHistory);
-        };
-
-        fetchData();
-    }, [show]);
-
-    // const checkWatchlistPromise = db.watchList.findFirst({
-    //     where: { showId: show.id, userId: user?.id }
-    // });
-
-    // const checkWatchHistoryPromise = db.watchHistory.findFirst({
-    //     where: { showId: show.id, userId: user?.id }
-    // });
-
-    // const isInWatchlist: boolean = await checkWatchlistPromise.then((data) => !!data);
-
-    // const checkWatchlist = checkWatchlistPromise.then((data) => data);
-    // const checkWatchHistory = checkWatchHistoryPromise.then((data) => data);
-
-    // const isInWatchlist = checkWatchlist.then((data) => data);
-
-    // const isInWatchHistory = checkWatchHistory.then((data) => data);
-
-    // if (isInWatchlist) {
-    //     type = "watchlist";
-    // }
-
-    // if (isInWatchHistory) {
-    //     type = "watchHistory";
-    // }
-
-
-    const onAddToWatchlist = (values: z.infer<typeof WatchListSchema>) => {
-        setError("");
-        setSuccess("");
-
-        startTransition(() => {
-            CreateWatchlist(values)
-                .then((data) => {
-                    setError(data.error);
-                    setSuccess(data.success);
-                    if (data.error === "Unauthorized") {
-                        router.push("/sign-in");
-                    }
-                })
-        });
-    };
-
-    const onAddToWatchHistory = (values: z.infer<typeof WatchListSchema>) => {
-        setError("");
-        setSuccess("");
-
-        startTransition(() => {
-            CreateWatchHistory(values)
-                .then((data) => {
-                    setError(data.error);
-                    setSuccess(data.success);
-                    if (data.error === "Unauthorized") {
-                        router.push("/sign-in");
-                    }
-                });
-        });
-    };
-
-    const onRemoveFromWatchlist = (values: z.infer<typeof WatchListDeleteSchema>) => {
-        setError("");
-        setSuccess("");
-
-        startTransition(() => {
-            DeleteWatchlist(values)
-                .then((data) => {
-                    setError(data.error);
-                    setSuccess(data.success);
-                    if (data.error === "Unauthorized") {
-                        router.push("/sign-in");
-                    }
-                });
-        });
-    };
-
-    const onRemoveFromWatchHistory = (values: z.infer<typeof WatchHistoryDeleteSchema>) => {
-        setError("");
-        setSuccess("");
-
-        startTransition(() => {
-            DeleteWatchHistory(values)
-                .then((data) => {
-                    setError(data.error);
-                    setSuccess(data.success);
-                    if (data.error === "Unauthorized") {
-                        router.push("/sign-in");
-                    }
-                });
-        });
-    };
-
-    console.log(isInWatchlist);
-    console.log(isInWatchHistory);
+    const [isInWatchlist, setIsInWatchlist] = useState<boolean>(inWatchlist);
+    const [isInWatchHistory, setIsInWatchHistory] = useState<boolean>(inWatchHistory);
 
     return (
         <Card key={show.id} className="w-full min-h-[300px] shadow-md hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-[1.025] flex flex-col">
@@ -180,22 +67,28 @@ const ShowCard = ({ show, type }: { show: Show & { review: { rating: number } | 
                     <Star className="w-5 h-5" fill="orange" color="orange" />
                     <span className="text-gray-500">{show.review?.rating.toFixed(1)}/5.0</span>
                 </div>
-                {!type && (
-                    <div className="flex flex-row gap-x-3">
-                        <Button variant="outline" onClick={() => onAddToWatchlist({ showId: show.id })}>
-                            <HeartIcon className="w-5 h-5" fill={isInWatchlist ? "red" : "transparent"} />
-                        </Button>
-                        <Button onClick={() => onAddToWatchHistory({ showId: show.id })}>Watched?</Button>
-                    </div>
-                )}
-                {type === "watchlist" && (
-                    <Button variant="outline" onClick={() => onRemoveFromWatchlist({ id: show.id })}>
-                        <HeartIcon className="w-5 h-5" fill="red" color="red" />
+                <div className="flex flex-row gap-x-3">
+                    <Button variant="outline" onClick={() => {
+                        if (isInWatchlist) {
+                            setIsInWatchlist(false);
+                            onWatch({ type: "removeWatchlist", showId: show.id })
+                        } else {
+                            setIsInWatchlist(true);
+                            onWatch({ type: "addWatchlist", showId: show.id })
+                        }
+                    }}>
+                        <HeartIcon className="w-5 h-5" fill={isInWatchlist ? "red" : "transparent"} color={!isInWatchlist ? "black" : "transparent"} />
                     </Button>
-                )}
-                {type === "watchHistory" && (
-                    <Button variant="outline" onClick={() => onRemoveFromWatchHistory({ id: show.id })}>Remove from Watch History</Button>
-                )}
+                    <Button onClick={() => {
+                        if (isInWatchHistory) {
+                            setIsInWatchHistory(false);
+                            onWatch({ type: "removeWatchHistory", showId: show.id })
+                        } else {
+                            setIsInWatchHistory(true);
+                            onWatch({ type: "addWatchHistory", showId: show.id })
+                        }
+                    }}>Watched {isInWatchHistory ? "!" : "?"}</Button>
+                </div>
             </CardFooter>
             {/* </Link> */}
         </Card>

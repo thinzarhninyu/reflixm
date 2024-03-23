@@ -3,16 +3,16 @@
 import { auth } from "@clerk/nextjs";
 import { db } from "@/lib/db";
 import z from "zod";
-import { WatchHistorySchema } from "@/schemas";
+import { WatchSchema } from "@/schemas";
 
-export const CreateWatchHistory = async (values: z.infer<typeof WatchHistorySchema>) => {
+export const CreateWatchHistory = async (values: z.infer<typeof WatchSchema>) => {
     const { userId } = auth();
 
     if (!userId) {
         return { error: "Unauthorized" };
     }
 
-    const validatedFields = WatchHistorySchema.safeParse(values);
+    const validatedFields = WatchSchema.safeParse(values);
 
     if (!validatedFields.success) {
         return { error: "Invalid fields!" };
@@ -22,7 +22,7 @@ export const CreateWatchHistory = async (values: z.infer<typeof WatchHistorySche
         const history = await db.watchHistory.create({
             data: {
                 userId,
-                showId: values.showId
+                showId: values.showId!
             }
         });
 
