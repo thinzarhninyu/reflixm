@@ -4,7 +4,8 @@ import { count } from "console";
 
 export const getHighestRatedShows = async () => {
     try {
-        const shows = await db.show.findMany({ orderBy: { review: { rating: "desc" } }, take: 3, include: { review: { select: { rating: true } } } });
+        const shows = await db.show.findMany({ orderBy: { review: { rating: "desc" } }, take: 3, include: { review: { select: { rating: true } } }, where: { review: { isNot: null } } });
+
         return shows;
     } catch {
         return null;
@@ -111,27 +112,31 @@ export const getRelatedShows = async (showId: string) => {
             include: { review: { select: { rating: true } } }
         });
 
-        const relatedCastsPromises = show.cast.map(async (cast) => {
-            return await db.show.findMany({
-                where: {
-                    cast: { has: cast },
-                    id: { not: show.id }
-                },
-                include: { review: { select: { rating: true } } }
-            });
+        const relatedCasts = await db.show.findMany({
+            where: {
+                cast: { hasSome: show.cast },
+                id: { not: show.id }
+            },
+            include: { review: { select: { rating: true } } }
         });
 
-        const relatedCasts = await Promise.all(relatedCastsPromises);
+        const relatedGenres = await db.show.findMany({
+            where: {
+                genre: { hasSome: show.genre },
+                id: { not: show.id }
+            },
+            include: { review: { select: { rating: true } } }
+        });
 
-        const flattenedRelatedCasts = relatedCasts.flat().filter((item, index, self) =>
-            index === self.findIndex((t) => (
-                t.id === item.id
-            ))
+        const relatedShows = [...relatedSeasons, ...relatedCasts, ...relatedGenres];
+
+        const uniqueRelatedShows = relatedShows.filter((value, index, self) =>
+            index === self.findIndex((t) => t.id === value.id)
         );
 
-        const relatedShows = [...relatedSeasons, ...flattenedRelatedCasts].slice(0, 3);
+        const limitedRelatedShows = uniqueRelatedShows.slice(0, 3);
 
-        return relatedShows;
+        return limitedRelatedShows;
     } catch (error) {
         console.error("Error fetching related shows:", error);
         return null;

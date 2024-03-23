@@ -17,13 +17,18 @@ const ShowDetailsPage = async ({ params }: { params: { id: string } }) => {
     }
 
     if (!review) {
-        return <div>No Review Found</div>
+        return (
+            <main className="flex min-h-screen flex-col items-center justify-between p-10 lg:p-24">
+                <div>No Review Found</div>
+            </main>
+        )
     }
 
     const comments = await getCommentsByReviewId(review.review.id);
 
     const relatedShows = await getRelatedShows(show.id);
 
+    console.log(relatedShows)
 
     const watchlist = await getWatchListByUserId(userId!);
     const watchHistory = await getWatchHistoryByUserId(userId!);
@@ -34,7 +39,7 @@ const ShowDetailsPage = async ({ params }: { params: { id: string } }) => {
             <Separator className="my-10" />
             <ShowReview review={review.review} votes={review.votes} />
             <Separator className="my-10" />
-            <h2 className="text-2xl font-bold mb-5">Related Shows</h2>
+            <h2 className="text-2xl font-bold mb-5">Suggested Shows</h2>
             <div className="flex flex-wrap mt-10">
                 {relatedShows && relatedShows.length > 0 ? <ShowList shows={relatedShows} watchHistory={watchHistory!} watchList={watchlist!} /> : <div>No Related Shows Found</div>}
             </div>
