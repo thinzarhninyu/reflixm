@@ -41,7 +41,7 @@ const ShowList = ({ shows, watchList, watchHistory }: { shows: ShowWithReview[],
         <>
             {shows && shows.map((show) => (
                 <div key={show.id} className="w-full sm:w-full md:w-full lg:w-1/3 p-2">
-                    <ShowCard show={show} onWatch={onWatch} inWatchHistory={watchHistory.some(history => history.id === show.id)} inWatchlist={watchList.some(list => list.id === show.id)} />
+                    <ShowCard show={show} onWatch={onWatch} inWatchHistory={watchHistory?.some(history => history.id === show.id)} inWatchlist={watchList?.some(list => list.id === show.id)} />
                 </div>
             ))}
         </>
