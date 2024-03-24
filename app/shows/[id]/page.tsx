@@ -7,6 +7,7 @@ import { auth } from "@clerk/nextjs";
 import ShowList from "@/components/show/show-list";
 
 const ShowDetailsPage = async ({ params }: { params: { id: string } }) => {
+
     const show = await getShowById(params.id);
     const review = await getShowReviewById(params.id);
 
@@ -35,7 +36,7 @@ const ShowDetailsPage = async ({ params }: { params: { id: string } }) => {
         <main className="flex min-h-screen flex-col items-center p-10 lg:p-24">
             <ShowDetails show={show} />
             <Separator className="my-10" />
-            <ShowReview review={review.review} votes={review.votes} />
+            <ShowReview show={show.title} review={review.review} votes={review.votes} />
             <Separator className="my-10" />
             <h2 className="text-2xl font-bold mb-5">Suggested Shows</h2>
             <div className="flex flex-wrap mt-10">

@@ -12,7 +12,6 @@ const ShowDetails = ({ show }: { show: Show }) => {
                 <Image src={show.image ? show.image : DEFAULT_IMAGE_URL} alt={show.title} width={700} height={200} />
             </div>
             <h1 className="text-4xl font-bold text-center mb-5">{show.title} ({show.releaseYear})</h1>
-            {/* <div className="sharethis-inline-share-buttons"></div> */}
             <div className="flex flex-wrap gap-x-3 gap-y-3 justify-center items-center mb-5">
                 {show.genre.map((genre, index) => (
                     <Badge className="bg-orange-700" key={index}>{genre}</Badge>
