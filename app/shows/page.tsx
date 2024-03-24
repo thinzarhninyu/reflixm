@@ -2,7 +2,7 @@ import { getShows, getWatchHistoryByUserId, getWatchListByUserId } from "@/data/
 import ShowResults from "@/components/show/show-results";
 import { auth } from "@clerk/nextjs";
 
-const AllShows = async ({ searchParams }: { searchParams: any }) => {
+const AllShows = async () => {
 
     const {userId} = auth();
     

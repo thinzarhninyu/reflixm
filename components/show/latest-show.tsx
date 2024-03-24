@@ -60,8 +60,7 @@ const LatestShow = ({
     };
 
     return (
-        <div>
-            {/* <Link href={`/shows/${show.id}`}> */}
+        <Link href={`/shows/${show.id}`}>
             <Card className='w-full h-full flex flex-col lg:flex-row'>
                 <div className='flex items-center w-full lg:w-25 p-3'>
                     <Image
@@ -79,9 +78,7 @@ const LatestShow = ({
                     <div>
                         <CardHeader>
                             <CardTitle className="whitespace-normal break-words mb-3">
-                                <Link key={show.id} href={`/shows/${show.id}`}>
-                                    {show.title}
-                                </Link>
+                                {show.title}
                             </CardTitle>
                             <div className="flex flex-wrap gap-x-3 gap-y-3 items-center">
                                 {show.genre.map((genre, index) => (
@@ -127,10 +124,9 @@ const LatestShow = ({
                             </div>
                         </CardFooter>
                     </div>
-                </div >
-            </Card >
-            {/* </Link> */}
-        </div>
+                </div>
+            </Card>
+        </Link>
     )
 }
 

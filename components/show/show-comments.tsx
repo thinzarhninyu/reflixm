@@ -54,7 +54,6 @@ const ShowComments = ({ comments, reviewId }: { comments: Comment[], reviewId: s
         <div className="mx-auto w-full rounded-lg border-2 pt-5">
             <h2 className="text-2xl font-bold mb-5 text-center">Comments</h2>
             <div className="mt-10">
-                {/* <h2 className="text-xl font-bold text-gray-800 mb-4 mt-10 text-center dark:text-white">Comments</h2> */}
                 <ScrollArea className="h-[300px] flex flex-col gap-6 pb-5">
                     <AlertBox title="Heads up!" description="Our comments are anonymous. Please be respectful and kind to other users." />
                     {comments && (
@@ -63,13 +62,14 @@ const ShowComments = ({ comments, reviewId }: { comments: Comment[], reviewId: s
                                 showComments.map((comment) => (
                                     <div key={comment.id} className="flex justify-between items-center space-x-4 p-5 text-left mx-5">
                                         <div className="flex flex-row gap-x-3">
-                                        <Avatar className="w-10 h-10">
-                                            <AvatarImage src={'https://github.com/shadcn.png'} />
-                                            <AvatarFallback>Avatar</AvatarFallback>
-                                        </Avatar>
-                                        <div className="flex items-center">
-                                            <p>{comment.comment}</p>
-                                        </div>
+                                            <Avatar className="w-10 h-10">
+                                                <AvatarImage src={'https://github.com/shadcn.png'} />
+                                                <AvatarFallback>Avatar</AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex flex-col justify-center bg-gray-200 p-3 rounded-md">
+                                                <p className="text-sm text-left mb-3">{comment.comment}</p>
+                                                <p className="text-xs text-gray-600">{comment.createdAt.toLocaleString('en-GB', { timeZone: 'UTC' })}</p>
+                                            </div>
                                         </div>
                                         {userId === comment.userId && (
                                             <Button className="bg-red-500 hover:bg-red-600" onClick={() => onDeleteComment({ id: comment.id })}>
@@ -86,12 +86,12 @@ const ShowComments = ({ comments, reviewId }: { comments: Comment[], reviewId: s
                         </>
                     )}
                 </ScrollArea>
-                <div className="mx-5 flex flex-row gap-x-3">
+                <div className="mx-5 flex flex-row gap-x-3 border-2 mb-5 px-3 rounded-md">
                     <Textarea
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         placeholder="Add a comment"
-                        className="md p-5 mb-5"
+                        className="border-0"
                     />
                     <Button className="mt-5 bg-indigo-600 hover:bg-indigo-700" onClick={() => onAddComment({ reviewId: reviewId, comment: comment })}>
                         <Send className="w-5 h-5 dark:text-white" />

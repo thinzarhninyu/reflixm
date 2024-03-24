@@ -28,13 +28,11 @@ const ShowDetailsPage = async ({ params }: { params: { id: string } }) => {
 
     const relatedShows = await getRelatedShows(show.id);
 
-    console.log(relatedShows)
-
     const watchlist = await getWatchListByUserId(userId!);
     const watchHistory = await getWatchHistoryByUserId(userId!);
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-10 lg:p-24">
+        <main className="flex min-h-screen flex-col items-center p-10 lg:p-24">
             <ShowDetails show={show} />
             <Separator className="my-10" />
             <ShowReview review={review.review} votes={review.votes} />

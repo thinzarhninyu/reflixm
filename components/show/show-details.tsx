@@ -3,6 +3,7 @@ import { DEFAULT_IMAGE_URL } from "@/data/constants";
 import { Show } from "@prisma/client";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 const ShowDetails = ({ show }: { show: Show }) => {
     return (
@@ -11,7 +12,7 @@ const ShowDetails = ({ show }: { show: Show }) => {
                 <Image src={show.image ? show.image : DEFAULT_IMAGE_URL} alt={show.title} width={700} height={200} />
             </div>
             <h1 className="text-4xl font-bold text-center mb-5">{show.title} ({show.releaseYear})</h1>
-            <div className="sharethis-inline-share-buttons"></div>
+            {/* <div className="sharethis-inline-share-buttons"></div> */}
             <div className="flex flex-wrap gap-x-3 gap-y-3 justify-center items-center mb-5">
                 {show.genre.map((genre, index) => (
                     <Badge className="bg-orange-700" key={index}>{genre}</Badge>
@@ -42,17 +43,26 @@ const ShowDetails = ({ show }: { show: Show }) => {
                 <div className="aspect-w-16 aspect-h-9">
                     <iframe src={show.trailerLinks[0]} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                 </div>
-                {/* <div className="flex flex-wrap gap-x-3 gap-y-3 items-center">
-                    {show.trailerLinks.map((link, index) => (
-                        <a href={link} target="_blank" rel="noopener noreferrer" className="underline" key={index}>Trailer {index + 1}</a>
-                    ))}
-                </div> */}
             </div>
             <div className="mb-5">
-                <p className="mb-3 text-lg font-bold">Watch Links:</p>                
+                <p className="mb-3 text-lg font-bold">Watch Links:</p>
                 <div className="flex flex-wrap gap-x-3 gap-y-3 items-center mt-3">
                     {show.watchLinks.map((link, index) => (
-                        <a href={link} target="_blank" rel="noopener noreferrer" className="underline" key={index}>Watch {index + 1}</a>
+                        <Link href={link} target="_blank" rel="noopener noreferrer" className="underline" key={index}>
+                            {/* Watch {index + 1} */}
+                            {link.includes('viki') ? 'Viki' :
+                                link.includes('netflix') ? 'Netflix' :
+                                    link.includes('viu') ? 'VIU' :
+                                        link.includes('wetv') ? 'WeTV' :
+                                            link.includes('youtube') ? 'YouTube' :
+                                                link.includes('amazon') ? 'Amazon' :
+                                                    link.includes('disney') ? 'Disney' :
+                                                        link.includes('hulu') ? 'Hulu' :
+                                                            link.includes('hbo') ? 'HBO' :
+                                                                link.includes('apple') ? 'Apple' :
+                                                                    link.includes('hotstar') ? 'Hotstar' :
+                                                                        'Other'}
+                        </Link>
                     ))}
                 </div>
             </div>

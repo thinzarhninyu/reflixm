@@ -18,7 +18,8 @@ const Home = async () => {
   const watchHistory = await getWatchHistoryByUserId(userId!);
 
   return (
-    <main className="flex min-h-screen flex-col p-10 lg:p-24">
+    <main className="flex flex-col min-h-screen p-10 lg:p-24">
+      <div>
       <h1 className="text-4xl font-bold text-center mb-10">Welcome to {APP_NAME}</h1>
       <SearchBar />
       <div className="mt-16 mb-10">
@@ -27,8 +28,9 @@ const Home = async () => {
           {latestRatedShow && <LatestShow show={latestRatedShow} inWatchHistory={watchHistory?.some(history => history.id === latestRatedShow.id) || false} inWatchlist={watchlist?.some(list => list.id === latestRatedShow.id) || false} />}
         </div>
       </div>
-      <div>
-        <div className="flex flex-row justify-between items-center lg:px-10 mb-5">
+      </div>
+      <>
+        <div className="flex flex-row justify-between items-center mb-5">
           <h2 className="text-2xl font-bold">Best Reviews</h2>
           <Link className="hover:underline flex flex-row gap-x-3 justify-center items-center" href="/shows">
             <span>View All</span>
@@ -38,7 +40,7 @@ const Home = async () => {
         <div className="flex flex-wrap">
           {highestRatedShows && <ShowList shows={highestRatedShows} watchHistory={watchHistory!} watchList={watchlist!} />}
         </div>
-      </div>
+      </>
     </main>
   );
 }

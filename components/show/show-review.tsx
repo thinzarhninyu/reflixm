@@ -31,14 +31,19 @@ const ShowReview = ({ review, votes }: { review: Review, votes: ReviewVote[] }) 
                     setSuccess(data.success);
                     setSuccess(data.success);
                     if (data.success && data.reviewVoteId) {
-                        if (type === "upvote" && !voteByUser?.vote) {
+                        if (type === "upvote" && voteByUser && !voteByUser.vote) {
                             setUpvotes(prevUpvotes => prevUpvotes + 1)
                             setDownvotes(prevDownvotes => prevDownvotes - 1)
-                        } else if (type === "downvote" && voteByUser?.vote) {
+                            setVoteByUser((prevVote) => ({ ...prevVote!, vote: type === "upvote" }))
+                        } else if (type === "downvote" && voteByUser && voteByUser.vote) {
                             setDownvotes(prevDownvotes => prevDownvotes + 1)
                             setUpvotes(prevUpvotes => prevUpvotes - 1)
+                            setVoteByUser((prevVote) => ({ ...prevVote!, vote: type === "downvote" }))
+                        } else if (type === "upvote") {
+                            setUpvotes(prevUpvotes => prevUpvotes + 1)
+                        } else {
+                            setDownvotes(prevDownvotes => prevDownvotes + 1)
                         }
-                        setVoteByUser((prevVote) => ({ ...prevVote!, vote: type === "upvote" }))
                     }
                 });
         });

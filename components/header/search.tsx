@@ -17,12 +17,7 @@ const HeaderSearch = ({ shows = [] }: { shows: Show[] }) => {
         } else {
             setShowResults(shows ?? []);
         }
-        console.log(search)
     }, [search, shows]);
-
-    useEffect(() => {
-        console.log(showResults);
-    }, [showResults]);
 
     return (
         <Command className="border-1 border-gray-200 dark:bg-gray-900 dark:text-white">
