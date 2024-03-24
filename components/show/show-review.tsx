@@ -8,8 +8,11 @@ import { VoteReview } from "@/actions/review-vote";
 import { useAuth } from "@clerk/nextjs";
 import { FacebookShare, WhatsappShare, TelegramShare, TwitterShare, FacebookMessengerShare, LineShare, ViberShare } from 'react-share-kit';
 import { APP_NAME } from "@/data/constants";
+import { usePathname } from "next/navigation";
 
 const ShowReview = ({ show, review, votes }: { show: string, review: Review, votes: ReviewVote[] }) => {
+
+    const pathname = usePathname();
 
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
@@ -66,46 +69,46 @@ const ShowReview = ({ show, review, votes }: { show: string, review: Review, vot
             </div>
             <div className="mt-5 flex flex-row gap-x-2 justify-center items-center">
                 <FacebookShare
-                    url={window.location.href}
+                    url={`${process.env.NEXT_PUBLIC_URL}${pathname}`}
                     quote={`${APP_NAME} - ${show}`}
                     hashtag={`#${APP_NAME}-reviews`}
                     round={true}
                     size={40}
                 />
                 <WhatsappShare
-                    url={window.location.href}
+                    url={`${process.env.NEXT_PUBLIC_URL}${pathname}`}
                     title={`${APP_NAME} - ${show}`}
                     separator=":: "
                     round={true}
                     size={40}
                 />
                 <TelegramShare
-                    url={window.location.href}
+                    url={`${process.env.NEXT_PUBLIC_URL}${pathname}`}
                     title={`${APP_NAME} - ${show}`}
                     round={true}
                     size={40}
                 />
                 <TwitterShare
-                    url={window.location.href}
+                    url={`${process.env.NEXT_PUBLIC_URL}${pathname}`}
                     title={`${APP_NAME} - ${show}`}
                     round={true}
                     size={40}
                 />
                 <FacebookMessengerShare
                     appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID!}
-                    url={window.location.href}
+                    url={`${process.env.NEXT_PUBLIC_URL}${pathname}`}
                     title={`${APP_NAME} - ${show}`}
                     round={true}
                     size={40}
                 />
                 <LineShare
-                    url={window.location.href}
+                    url={`${process.env.NEXT_PUBLIC_URL}${pathname}`}
                     title={`${APP_NAME} - ${show}`}
                     round={true}
                     size={40}
                 />
                 <ViberShare
-                    url={window.location.href}
+                    url={`${process.env.NEXT_PUBLIC_URL}${pathname}`}
                     title={`${APP_NAME} - ${show}`}
                     round={true}
                     size={40}
