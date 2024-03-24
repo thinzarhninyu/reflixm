@@ -70,6 +70,7 @@ const ShowReview = ({ show, review, votes }: { show: string, review: Review, vot
             <div className="mt-5 flex flex-row gap-x-2 justify-center items-center">
                 <FacebookShare
                     url={`${process.env.NEXT_PUBLIC_URL}${pathname}`}
+                    title={`${APP_NAME} - ${show}`}
                     quote={`${APP_NAME} - ${show}`}
                     hashtag={`#${APP_NAME}-reviews`}
                     round={true}

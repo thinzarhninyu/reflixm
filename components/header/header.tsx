@@ -11,8 +11,6 @@ import {
 import { APP_LOGO, APP_NAME } from "@/data/constants";
 import HeaderSearch from "@/components/header/search";
 import { getShows } from "@/data/show";
-import { Command, CommandEmpty, CommandInput, CommandList, CommandGroup, CommandItem } from "@/components/ui/command";
-
 import { SignInButton, UserButton, auth } from "@clerk/nextjs";
 import { Heart, History, LogIn } from "lucide-react";
 
